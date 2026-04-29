@@ -48,8 +48,17 @@ def correct_spelling(sentence: str) -> str:
     return sentence
 
 def generate_report():
+    choose_shift = ''
     current_date = date.today().strftime("%d/%m/%Y")
-    report = [f"RELATÓRIO – TURNO TARDE ({current_date})"]
+
+    while choose_shift not in ['M', 'T']:
+        choose_shift = input("Turno da manhã ou tarde (M/T): ").upper().strip()
+
+    if choose_shift == "M": turn = 'MANHÃ'
+    if choose_shift == "T": turn = 'TARDE'
+
+
+    report = [f"RELATÓRIO – TURNO {turn} ({current_date})"]
 
     phrases = []
     print("Digite as frases para o relatório. Quando quiser parar, digite STOP.")
@@ -61,12 +70,16 @@ def generate_report():
 
     report.extend(phrases)
 
-    reset_list = input("A lista de chamados foi zerada? (s/n): ").lower()
-    if reset_list == 's':
-        report.append("* Lista de chamados zerada")
+    reset_list = ""
 
-    total_calls = input("Informe o total de chamados atendidos (planejados, pendentes e solucionados): ")
-    report.append(f"Chamados atendidos (planejados, pendentes e solucionados) : {total_calls}")
+    while reset_list not in ['S', 'N']:
+        reset_list = input("A lista de chamados foi zerada? (S/N): ").upper().strip()
+
+    if reset_list == 'S':report.append("* Lista de chamados zerada")
+
+    total = input("Informe o total de chamados atendidos (planejados, pendentes e solucionados): ")
+    total_calls = list(map(int, total.split(",")))
+    report.append(f"Chamados atendidos (planejados, pendentes e solucionados) : {sum(total_calls)}")
 
     print('-'*50)
     print("\n".join(report))
@@ -76,3 +89,4 @@ if __name__ == "__main__":
     generate_report()
     # input serve para terminal não fechar, como estou gerando executavel
     input('\nPressione "ENTER" para fechar!')
+
